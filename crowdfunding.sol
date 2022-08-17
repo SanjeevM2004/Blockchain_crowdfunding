@@ -47,10 +47,10 @@ contract CrowdFunding{
         
     }
     modifier onlyManger(){
-        require(msg.sender==manager,"Only manager can calll this function");
+        require(msg.sender==manager,"Only manager can call this function");
         _;
     }
-    function createRequests(string memory _description,address payable _recipient,uint _value) public onlyManger{
+    function createRequests(string memory _description,address payable _recipient,uint _value) public onlyManager{
         Request storage newRequest = requests[numRequests];
         numRequests++;
         newRequest.description=_description;
@@ -66,7 +66,7 @@ contract CrowdFunding{
         thisRequest.voters[msg.sender]=true;
         thisRequest.noOfVoters++;
     }
-    function makePayment(uint _requestNo) public onlyManger{
+    function makePayment(uint _requestNo) public onlyManager{
         require(raisedAmount>=target);
         Request storage thisRequest=requests[_requestNo];
         require(thisRequest.completed==false,"The request has been completed");
