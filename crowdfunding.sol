@@ -1,3 +1,4 @@
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.5.0 < 0.9.0;
 
 contract CrowdFunding{
@@ -16,15 +17,17 @@ contract CrowdFunding{
         bool completed;
         uint noOfVoters;
         mapping(address=>bool) voters;
+    
     }
     mapping(uint=>Request) public requests;
     uint public numRequests;
-    constructor(uint _target,uint minimumContribution){
+    constructor(uint _target,uint _minimumContribution){
         target=_target;
         deadline= 172800;//2 days = 172800 seconds 
+        minimumContribution = _minimumContribution;
         manager=msg.sender;
-    }
     
+    }
     function sendEth() public payable{
         require(block.timestamp < deadline,"Deadline has passed");
         require(msg.value >=minimumContribution,"Minimum Contribution is not met");
@@ -34,9 +37,11 @@ contract CrowdFunding{
         }
         contributors[msg.sender]+=msg.value;
         raisedAmount+=msg.value;
+    
     }
     function getContractBalance() public view returns(uint){
         return address(this).balance;
+    
     }
     function refund() public{
         require(block.timestamp>deadline && raisedAmount<target,"You are not eligible for refund");
@@ -47,10 +52,11 @@ contract CrowdFunding{
         
     }
     modifier onlyManger(){
-        require(msg.sender==manager,"Only manager can call this function");
+        require(msg.sender==manager,"Only manager can calll this function");
         _;
+    
     }
-    function createRequests(string memory _description,address payable _recipient,uint _value) public onlyManager{
+    function createRequests(string memory _description,address payable _recipient,uint _value) public onlyManger{
         Request storage newRequest = requests[numRequests];
         numRequests++;
         newRequest.description=_description;
@@ -58,6 +64,17 @@ contract CrowdFunding{
         newRequest.value=_value;
         newRequest.completed=false;
         newRequest.noOfVoters=0;
+    
+    }
+    function acceptRequest(uint decision) private {
+        Request storage newRequest = requests[numRequests];
+        require(msg.sender==manager,"Only manager can accept or reject request");
+        require(raisedAmount >= target,"Target hasn't reached yet");
+        if(decision == 1){
+            contributors[msg.sender] = newRequest.value;
+        }
+        require(decision==1,"Your request has been rejected");
+    
     }
     //Checking if majority wants to allow the manager use the money from the smartcontract for the charity or investment he wants to make.In other words checking if majority of the people trust in him.
     function voteRequest(uint _requestNo) public{
@@ -66,13 +83,16 @@ contract CrowdFunding{
         require(thisRequest.voters[msg.sender]==false,"You have already voted");
         thisRequest.voters[msg.sender]=true;
         thisRequest.noOfVoters++;
+    
     }
-    function makePayment(uint _requestNo) public onlyManager{
-        require(raisedAmount >= target);
-        Request storage thisRequest = requests[_requestNo];
+    function makePayment(uint _requestNo) public onlyManger{
+        require(raisedAmount>=target);
+        Request storage thisRequest=requests[_requestNo];
         require(thisRequest.completed==false,"The request has been completed");
         require(thisRequest.noOfVoters > noOfContributors/2,"Majority does not support");
         thisRequest.recipient.transfer(thisRequest.value);
         thisRequest.completed=true;
+    
     }
+    
 }
