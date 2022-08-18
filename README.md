@@ -8,3 +8,5 @@ The deadline is already fixed as 2 days.
 You can give the minimum contribution as wei which is the smallest combo of ether.
 In solidity in the payable option itself it is enabled for the people to transact in ether.
 So all comditions for the project are met.Even the approval of each request is taken care using the acceptRequest Function.
+The voteRequest option is given to check if majority of the contributors still want to allow the manager use their funds for his investment.
+if majority dont support his invstment and prefer a refund then he will refund the amount to all the contributors.
