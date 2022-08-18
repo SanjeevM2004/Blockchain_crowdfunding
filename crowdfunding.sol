@@ -59,16 +59,17 @@ contract CrowdFunding{
         newRequest.completed=false;
         newRequest.noOfVoters=0;
     }
+    //Checking if majority wants to allow the manager use the money from the smartcontract for the charity or investment he wants to meke.In other words checking if the prople trust in him.
     function voteRequest(uint _requestNo) public{
-        require(contributors[msg.sender]>0,"YOu must be contributor");
+        require(contributors[msg.sender]>0,"You must be contributor");
         Request storage thisRequest=requests[_requestNo];
         require(thisRequest.voters[msg.sender]==false,"You have already voted");
         thisRequest.voters[msg.sender]=true;
         thisRequest.noOfVoters++;
     }
     function makePayment(uint _requestNo) public onlyManager{
-        require(raisedAmount>=target);
-        Request storage thisRequest=requests[_requestNo];
+        require(raisedAmount >= target);
+        Request storage thisRequest = requests[_requestNo];
         require(thisRequest.completed==false,"The request has been completed");
         require(thisRequest.noOfVoters > noOfContributors/2,"Majority does not support");
         thisRequest.recipient.transfer(thisRequest.value);
