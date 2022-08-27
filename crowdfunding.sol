@@ -91,7 +91,7 @@ contract CrowdFunding{
     
     }
     //if majority dont support money will be refunded to all.
-    function makePayment(uint _requestNo) public onlyManger{
+    function makePayment(uint _requestNo) public onlyManager{
         require(raisedAmount>=target);
         Request storage thisRequest=requests[_requestNo];
         require(thisRequest.completed==false,"The request has been completed");
