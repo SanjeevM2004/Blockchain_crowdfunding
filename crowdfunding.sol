@@ -71,8 +71,8 @@ contract CrowdFunding{
     
     }
     //manager's decision to approve or reject the request.
-    function acceptRequest(uint decision) private {
-        Request storage newRequest = requests[numRequests];
+    function acceptRequest(uint decision, uint _requestNo)) private {
+        Request storage newRequest = requests[_requestNo];
         require(msg.sender==manager,"Only manager can accept or reject request");
         require(raisedAmount >= target,"Target hasn't reached yet");
         if(decision == 1){
