@@ -78,7 +78,7 @@ contract CrowdFunding{
         if(decision == 1){
             contributors[msg.sender] = newRequest.value;
         }
-        require(decision==1,"Your request has been rejected");
+        require(decision==1,"You have rejected the request");
     
     }
     //Checking if majority wants to allow the manager use the money from the smartcontract for the charity or investment he wants to make.In other words checking if majority of the people trust in him.
